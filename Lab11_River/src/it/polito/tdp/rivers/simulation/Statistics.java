@@ -4,7 +4,7 @@ public class Statistics {
 	
 	private int daysFailed;
 	private int daysOk;
-	private int totalC;
+	private double totalC;
 	private int waterOver;
 	
 	public Statistics(){
@@ -30,11 +30,11 @@ public class Statistics {
 		this.daysOk = daysOk;
 	}
 
-	public int getTotalC() {
+	public double getTotalC() {
 		return totalC;
 	}
 
-	public void setTotalC(int totalC) {
+	public void setTotalC(double totalC) {
 		this.totalC = totalC;
 	}
 	

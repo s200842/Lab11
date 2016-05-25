@@ -15,14 +15,16 @@ public class Core {
 	private double k;
 	private double Q;
 	private double C;
+	private double f_med;
 	private int daysOk;
 	private int daysKo;
-	private int cTot;
+	private double cTot;
 	private int wOver;
 	
 	//Costruttore ed inizializzazione variabili
-	public Core(double k){
+	public Core(double k, double f_med){
 		this.k = k;
+		this.f_med = f_med;
 		daysOk = 0;
 		daysKo = 0;
 		cTot = 0;
@@ -42,18 +44,11 @@ public class Core {
 		case FLOW_IN:
 			double f_in = e.getFlow().getFlow()*86400;
 			System.out.println(String.format("[Giorno %s] --- Flusso in entrata = %.5f", e.getDate().toString(), f_in));
-			//Aumento la quantità di acqua nel bacino del valore f_in = f_med*86400
+			//Aumento la quantità di acqua nel bacino del valore f_in*86400
 			C += f_in;
 			System.out.println(String.format("Capacità odierna: %.5f metri cubi.", C));
-			//Controllo se si verifica tracimazione
-			if(C > Q){
-				System.out.println("TRACIMAZIONE!! Livello acqua riportato a "+Q+" metri cubi");
-				wOver++;
-				C = Q;
-			}
-			cTot += C;
 			//Calcolo la quantità richiesta giornaliera f_out_min
-			double f_out_min = 0.8*e.getFlow().getFlow()*86400;
+			double f_out_min = 0.8*f_med*86400;
 			//Controllo se i campi devono essere irrigati
 			if(ThreadLocalRandom.current().nextDouble() <= 0.05){
 				f_out_min *= 10;
@@ -72,6 +67,13 @@ public class Core {
 				System.out.println("Non si ha a disposizione acqua sufficiente per soddisfare le richieste giornaliere");
 				daysKo++;
 			}
+			//Controllo se si verifica tracimazione
+			if(C > Q){
+				System.out.println("TRACIMAZIONE!! Livello acqua riportato a "+Q+" metri cubi");
+				wOver++;
+				C = Q;
+			}
+			cTot += C;
 			break;
 		default:
 			System.err.println("Caso non gestito");
@@ -83,7 +85,7 @@ public class Core {
 	//Metodo simula che gestisce il susseguirsi degli step
 	public void start(){
 		//Q = k * 30 giorni * f_med;
-		Q = 30*86400*k*(eventList.peek().getFlow().getFlow());
+		Q = 30*86400*k*f_med;
 		C = Q/2;
 		while(!eventList.isEmpty()){
 			step();

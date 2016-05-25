@@ -59,7 +59,7 @@ public class RiversController {
     	txtStartDate.setText(model.getFirstMeasure(r).toString());
     	txtEndDate.setText(model.getLastMeasure(r).toString());
     	txtNumMeasurements.setText(String.valueOf(r.getFlows().size()));
-    	txtFMed.setText(String.format("%.5f", model.getMediumFlow(r)));
+    	txtFMed.setText(String.format("%.2f", model.getMediumFlow(r)));
     }
     
 
@@ -67,15 +67,18 @@ public class RiversController {
     void doSimulate(ActionEvent event) {
     	txtResult.clear();
     	try{
-    		model.simulate(boxRiver.getValue(), Double.parseDouble(txtK.getText()));
+    		if(Double.parseDouble(txtK.getText()) < 0){
+    			throw new RuntimeException();
+    		}
+    		model.simulate(boxRiver.getValue(), Double.parseDouble(txtK.getText()), model.getMediumFlow(boxRiver.getValue()));
     		txtResult.setText(String.format("Ci sono stati %d giorni su %d in cui non si è potuta raggiungere l'erogazione minima.\n"
-    				+"Vi sono inoltre state %d tracimazioni.\nL'occupazione media del bacino è stata di %.3f metri cubi di acqua.", 
+    				+"Vi sono inoltre state %d tracimazioni.\nL'occupazione media del bacino è stata di %.2f metri cubi di acqua.", 
     				model.getStats().getDaysFailed(),
     				(model.getStats().getDaysOk()+model.getStats().getDaysFailed()),
     				model.getStats().getWaterOver(),
     				model.getStats().getAverageC()));
     	}
-    	catch(NumberFormatException e){
+    	catch(Exception e){
     		txtResult.setText("Errore, si prega di inserire un numero nel campo K");
     	}
     }

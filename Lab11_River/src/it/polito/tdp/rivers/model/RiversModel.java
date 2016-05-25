@@ -71,8 +71,8 @@ public class RiversModel {
 		return (totalFlow/r.getFlows().size());
 	}
 	
-	public void simulate(River r, double k){
-		simulator = new Core(k);
+	public void simulate(River r, double k, double f_med){
+		simulator = new Core(k, f_med);
 		for(Flow f : flows){
 			if(f.getRiver().equals(r)){
 				simulator.addEvent(new Event(f.getDay(), EventType.FLOW_IN, f));
