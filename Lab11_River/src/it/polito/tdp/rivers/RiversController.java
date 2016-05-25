@@ -61,6 +61,24 @@ public class RiversController {
     	txtNumMeasurements.setText(String.valueOf(r.getFlows().size()));
     	txtFMed.setText(String.format("%.5f", model.getMediumFlow(r)));
     }
+    
+
+    @FXML
+    void doSimulate(ActionEvent event) {
+    	txtResult.clear();
+    	try{
+    		model.simulate(boxRiver.getValue(), Double.parseDouble(txtK.getText()));
+    		txtResult.setText(String.format("Ci sono stati %d giorni su %d in cui non si è potuta raggiungere l'erogazione minima.\n"
+    				+"Vi sono inoltre state %d tracimazioni.\nL'occupazione media del bacino è stata di %.3f metri cubi di acqua.", 
+    				model.getStats().getDaysFailed(),
+    				(model.getStats().getDaysOk()+model.getStats().getDaysFailed()),
+    				model.getStats().getWaterOver(),
+    				model.getStats().getAverageC()));
+    	}
+    	catch(NumberFormatException e){
+    		txtResult.setText("Errore, si prega di inserire un numero nel campo K");
+    	}
+    }
 
     @FXML
     void initialize() {

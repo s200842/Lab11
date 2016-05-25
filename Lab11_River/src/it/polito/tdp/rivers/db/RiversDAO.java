@@ -40,7 +40,7 @@ public class RiversDAO {
 	}
 
 	public List<Flow> getAllFlows(List<River> rivers) {
-		final String sql = "SELECT id, day, flow, river FROM flow";
+		final String sql = "SELECT id, day, flow, river FROM flow ORDER BY day";
 
 		List<Flow> flows = new LinkedList<Flow>();
 

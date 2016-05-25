@@ -4,12 +4,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 import it.polito.tdp.rivers.db.RiversDAO;
+import it.polito.tdp.rivers.simulation.Core;
+import it.polito.tdp.rivers.simulation.Event;
+import it.polito.tdp.rivers.simulation.Event.EventType;
+import it.polito.tdp.rivers.simulation.Statistics;
 
 public class RiversModel {
 	
 	private RiversDAO dao;
 	private List<River> rivers;
 	private List<Flow> flows;
+	private Core simulator;
 	
 	public RiversModel(){
 		dao = new RiversDAO();
@@ -64,6 +69,20 @@ public class RiversModel {
 			totalFlow += f.getFlow();
 		}
 		return (totalFlow/r.getFlows().size());
+	}
+	
+	public void simulate(River r, double k){
+		simulator = new Core(k);
+		for(Flow f : flows){
+			if(f.getRiver().equals(r)){
+				simulator.addEvent(new Event(f.getDay(), EventType.FLOW_IN, f));
+			}
+		}
+		simulator.start();
+	}
+	
+	public Statistics getStats(){
+		return simulator.getStats();
 	}
 
 }
