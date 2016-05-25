@@ -2,6 +2,10 @@ package it.polito.tdp.rivers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import it.polito.tdp.rivers.model.River;
+import it.polito.tdp.rivers.model.RiversModel;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -17,7 +21,7 @@ public class RiversController {
     private URL location;
 
     @FXML
-    private ComboBox<?> boxRiver;
+    private ComboBox<River> boxRiver;
 
     @FXML
     private TextField txtEndDate;
@@ -39,6 +43,24 @@ public class RiversController {
 
     @FXML
     private TextField txtK;
+    
+    private RiversModel model;
+    
+    public void setModel(RiversModel model){
+    	this.model = model;
+    	//Popolo la ComboBox
+    	boxRiver.getItems().addAll(model.getRivers());
+    }
+    
+    @FXML
+    void doGetData(ActionEvent event) {
+    	River r = boxRiver.getValue();
+    	//System.out.println("Selezionato fiume: "+r.getName());
+    	txtStartDate.setText(model.getFirstMeasure(r).toString());
+    	txtEndDate.setText(model.getLastMeasure(r).toString());
+    	txtNumMeasurements.setText(String.valueOf(r.getFlows().size()));
+    	txtFMed.setText(String.format("%.5f", model.getMediumFlow(r)));
+    }
 
     @FXML
     void initialize() {

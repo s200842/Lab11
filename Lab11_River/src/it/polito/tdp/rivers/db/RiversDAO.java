@@ -25,8 +25,9 @@ public class RiversDAO {
 			ResultSet res = st.executeQuery();
 
 			while (res.next()) {
+				rivers.add(new River(res.getInt("id"), res.getString("name")));
 			}
-			rivers.add(new River(res.getInt("id"), res.getString("name")));
+			
 
 			conn.close();
 		} catch (SQLException e) {

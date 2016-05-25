@@ -5,7 +5,7 @@ import java.util.List;
 
 public class River {
 
-	private List<Flow> flows;
+	private List<Flow> flows = new ArrayList<Flow>();
 	private String name;
 	private int id;
 
@@ -42,6 +42,10 @@ public class River {
 		if (flows == null)
 			flows = new ArrayList<Flow>();
 		return flows;
+	}
+	
+	public void addToFlows(Flow f){
+		flows.add(f);
 	}
 
 	@Override
